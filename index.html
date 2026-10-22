@@ -1,515 +1,236 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Killian Miller</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&family=Ubuntu+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Killian Miller | Security, Systems &amp; Applied AI</title>
+  <meta name="description" content="Killian Miller builds security tools, systems software, and applications. Explore selected public projects, technical interests, and contact information.">
+  <link rel="canonical" href="https://kmiller.dev/">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Killian Miller | Security, Systems &amp; Applied AI">
+  <meta property="og:description" content="Selected projects in security tooling, systems software, and application development.">
+  <meta property="og:url" content="https://kmiller.dev/">
+  <meta name="twitter:card" content="summary">
+  <meta name="theme-color" content="#0b1525">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <style>
-    /* ----- Reset / base ----- */
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; overflow-x: hidden; }
+    :root {
+      color-scheme: dark;
+      --background: #0b1525;
+      --surface: #121f32;
+      --text: #edf2f8;
+      --muted: #b5c3d5;
+      --accent: #92e3be;
+      --line: #33435b;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 2rem; }
     body {
-      font-family: 'Ubuntu Mono', 'Courier New', monospace;
-      color: #e8f1ff;
-      /* Darkest in top-left, fading to bright pastel sky in bottom-right */
-      background:
-        linear-gradient(135deg,
-          #061226 0%,
-          #0d2548 18%,
-          #1a4584 38%,
-          #2c73c2 60%,
-          #5fa6e8 82%,
-          #9cd0ff 100%) fixed;
-      min-height: 100vh;
-      position: relative;
-      overflow-y: auto;
-    }
-    /* subtle dot texture, very low contrast */
-    body::before {
-      content: "";
-      position: fixed; inset: 0;
-      background-image:
-        radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
-        radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 100px 100px, 60px 60px;
-      background-position: 0 0, 30px 30px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ----- Layout ----- */
-    main {
-      position: relative;
-      z-index: 1;
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      padding: 0;
-    }
-
-    /* ----- Tab bar — one grey rounded outline wrapping all tabs ----- */
-    .tabs-bar {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      padding: 1.2rem 1.5rem 1rem 1.5rem;
-      background: linear-gradient(180deg,
-        rgba(6, 18, 38, 0.55) 0%,
-        rgba(6, 18, 38, 0.0) 100%);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-    }
-    .tabs {
-      display: inline-flex;
-      gap: 0.25rem;
-      padding: 0.35rem;
-      background: rgba(60, 60, 60, 0.45);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      border-radius: 999px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
-    }
-    .tab {
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: 0.93rem;
-      padding: 0.5rem 1.15rem;
-      border-radius: 999px;
-      cursor: pointer;
-      background: transparent;
-      color: #d6d6d6;
-      border: none;
-      transition: background 0.25s ease, color 0.25s ease;
-      user-select: none;
-      white-space: nowrap;
-    }
-    .tab:hover {
-      color: #ffffff;
-    }
-    .tab.active {
-      background: #ffffff;
-      color: #0a1e3d;
-      font-weight: 700;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    .tab .pref {
-      color: #6fd6a3;
-      margin-right: 0.35em;
-    }
-    .tab.active .pref { color: #1f8a55; }
-
-    /* ----- Body wrap ----- */
-    .body-wrap {
-      display: flex;
-      flex-direction: column;
-      padding: 0 8vw;
-    }
-
-    /* ----- Hero ----- */
-    .hero {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 5vh 0 3vh 0;
-    }
-    .prompt-line {
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      color: #9bd5ff;
-      margin-bottom: 0.7em;
-    }
-    .prompt-line .user { color: #6fd6a3; }
-    .prompt-line .at,
-    .prompt-line .sep { color: #e8f1ff; }
-    .prompt-line .path { color: #ffd58a; }
-
-    .hero h1 {
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: clamp(2rem, 5.5vw, 4.5rem);
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: #ffffff;
-      min-height: 1.2em;
-    }
-    .hero .cursor {
-      display: inline-block;
-      width: 0.55ch;
-      background: currentColor;
-      height: 1em;
-      vertical-align: -0.12em;
-      margin-left: 0.06em;
-      opacity: 0.9;
-      transition: opacity 0.4s ease 0.6s;
-    }
-    .hero .cursor.gone { opacity: 0; }
-    .hero .sub {
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: clamp(1rem, 1.7vw, 1.3rem);
-      color: #b3d1ff;
-      margin-top: 0.9em;
-      min-height: 1.4em;
-    }
-
-    /* ----- Content area — free-floating, no panel, no boxes ----- */
-    .panel-wrap {
-      position: relative;
-      padding: 2vh 0 6vh 0;
-    }
-    .panel {
-      width: 100%;
-      max-width: 880px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.35s ease, transform 0.35s ease;
-      pointer-events: none;
-    }
-    .panel.visible {
-      opacity: 1;
-      transform: translateY(0);
-      pointer-events: auto;
-    }
-    .panel-content { display: none; }
-    .panel-content.active { display: block; }
-    .panel-content > * {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    .panel-content.active > * {
-      animation: popIn 0.45s ease forwards;
-    }
-    .panel-content.active > *:nth-child(1) { animation-delay: 0.08s; }
-    .panel-content.active > *:nth-child(2) { animation-delay: 0.15s; }
-    .panel-content.active > *:nth-child(3) { animation-delay: 0.22s; }
-    .panel-content.active > *:nth-child(4) { animation-delay: 0.29s; }
-    .panel-content.active > *:nth-child(5) { animation-delay: 0.36s; }
-    .panel-content.active > *:nth-child(6) { animation-delay: 0.43s; }
-    .panel-content.active > *:nth-child(7) { animation-delay: 0.50s; }
-    .panel-content.active > *:nth-child(8) { animation-delay: 0.57s; }
-
-    .panel h2 {
-      font-family: 'Ubuntu', sans-serif;
-      font-weight: 500;
-      font-size: 1.7rem;
-      color: #ffffff;
-      margin-bottom: 1.4rem;
-      letter-spacing: -0.2px;
-    }
-    .panel h2::before {
-      content: "$ cat ";
-      color: #6fd6a3;
-      font-family: 'Ubuntu Mono', monospace;
-      font-weight: 400;
-    }
-    .panel p {
-      font-family: 'Ubuntu', sans-serif;
-      line-height: 1.7;
-      color: #e0eeff;
-      font-size: 1.02rem;
-      max-width: 760px;
-    }
-    .panel p + p { margin-top: 1rem; }
-    .panel ul {
-      list-style: none;
-      padding-left: 0;
       margin: 0;
-    }
-    .panel li {
-      font-family: 'Ubuntu', sans-serif;
-      line-height: 1.65;
-      color: #e0eeff;
+      background: var(--background);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       font-size: 1rem;
-      padding-left: 1.4em;
-      position: relative;
-      margin-bottom: 0.55rem;
+      line-height: 1.7;
     }
-    .panel li::before {
-      content: "›";
+    a { color: var(--accent); text-underline-offset: .2em; }
+    a:hover { color: #fff; }
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 5px;
+      border-radius: 2px;
+    }
+    .skip {
       position: absolute;
-      left: 0;
-      color: #6fd6a3;
-      font-family: 'Ubuntu Mono', monospace;
-      font-weight: 700;
+      top: .5rem;
+      left: .5rem;
+      transform: translateY(-200%);
+      background: var(--text);
+      color: var(--background);
+      padding: .6rem 1rem;
+      z-index: 10;
     }
-    .panel a {
-      color: #9bd5ff;
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(155, 213, 255, 0.4);
-      transition: color 0.15s, border-color 0.15s;
-    }
-    .panel a:hover {
-      color: #ffffff;
-      border-bottom-color: #ffffff;
-    }
-
-    /* projects — free floating, no box */
-    .project {
-      margin-bottom: 1.6rem;
-      padding-left: 0;
-      border-left: 2px solid rgba(111, 214, 163, 0.45);
-      padding: 0.3rem 0 0.3rem 1rem;
-    }
-    .project h3 {
-      font-family: 'Ubuntu Mono', monospace;
-      font-weight: 700;
-      font-size: 1.15rem;
-      color: #ffffff;
-      margin-bottom: 0.35rem;
-    }
-    .project .meta {
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: 0.85rem;
-      color: #9bd5ff;
-      margin-bottom: 0.55rem;
-    }
-    .project p {
-      font-size: 0.98rem;
-      color: #d6e6ff;
-    }
-
-    /* skills — open grid, no boxes */
-    .skill-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0.6rem 1.8rem;
-    }
-    .skill-grid div {
-      font-family: 'Ubuntu Mono', monospace;
-      color: #e0eeff;
-      padding-left: 1.2em;
-      position: relative;
-      font-size: 0.95rem;
-    }
-    .skill-grid div::before {
-      content: "›";
-      position: absolute;
-      left: 0;
-      color: #6fd6a3;
-    }
-
-    /* ----- Footer — minimal, no background ----- */
-    footer {
+    .skip:focus { transform: translateY(0); }
+    .skip:hover { color: var(--background); }
+    .container { width: min(100% - 3rem, 70rem); margin-inline: auto; }
+    header {
       display: flex;
-      justify-content: space-between;
+      flex-wrap: wrap;
       align-items: center;
-      padding: 1.8rem 8vw;
-      color: #b3d1ff;
-      font-family: 'Ubuntu Mono', monospace;
-      font-size: 0.85rem;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-block: 1.6rem;
+      border-bottom: 1px solid var(--line);
     }
-    footer .links { display: flex; gap: 1.4rem; }
-    footer a {
-      color: #d6e6ff;
+    .brand {
+      color: var(--text);
+      font-weight: 700;
       text-decoration: none;
-      transition: color 0.15s;
+      letter-spacing: -.03em;
     }
-    footer a:hover { color: #ffffff; }
-
-    /* ----- Animations (all one-shot) ----- */
-    @keyframes popIn {
-      to { opacity: 1; transform: translateY(0); }
+    nav { display: flex; flex-wrap: wrap; gap: .3rem 1.5rem; }
+    nav a { color: var(--muted); padding-block: .4rem; text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    .hero { padding-block: clamp(3.5rem, 9vw, 7rem); max-width: 53rem; }
+    .eyebrow {
+      margin: 0 0 1.2rem;
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: .88rem;
+      color: var(--accent);
     }
-
-    /* ----- Responsive ----- */
-    @media (max-width: 720px) {
-      .body-wrap { padding: 0 5vw; }
-      .tab { padding: 0.45rem 0.9rem; font-size: 0.85rem; }
-      footer { flex-direction: column; gap: 0.8rem; padding: 1.4rem 5vw; }
+    h1, h2, h3 { line-height: 1.2; letter-spacing: -.035em; }
+    h1 { font-size: clamp(2.75rem, 8vw, 5.5rem); margin: 0 0 1.5rem; }
+    h2 { font-size: clamp(1.75rem, 4vw, 2.4rem); margin: 0 0 1rem; }
+    h3 { font-size: 1.25rem; margin: 0 0 .6rem; }
+    p { margin: 0 0 1rem; }
+    .lead { max-width: 46rem; color: var(--muted); font-size: clamp(1.1rem, 2vw, 1.3rem); }
+    .actions { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; margin-top: 2rem; align-items: center; }
+    .button {
+      display: inline-block;
+      background: var(--accent);
+      color: var(--background);
+      border: 1px solid var(--accent);
+      border-radius: .4rem;
+      font-weight: 650;
+      padding: .7rem 1rem;
+      text-decoration: none;
+    }
+    .button:hover { background: #b6f2d7; color: var(--background); }
+    .section { padding-block: 3.5rem; border-top: 1px solid var(--line); }
+    .section-intro { max-width: 44rem; color: var(--muted); margin-bottom: 2rem; }
+    .projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+    .project { padding: 1.5rem; background: var(--surface); border: 1px solid var(--line); border-radius: .6rem; }
+    .project p { color: var(--muted); }
+    .project .stack { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; color: var(--accent); font-size: .82rem; }
+    .project .detail { font-size: .94rem; }
+    .project-links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1.5rem; }
+    .more { color: var(--muted); margin-top: 1.5rem; }
+    .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; }
+    .columns p { color: var(--muted); }
+    .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2.5rem; margin: 0; }
+    .skills dt { font-weight: 700; margin-bottom: .3rem; }
+    .skills dd { margin: 0; color: var(--muted); }
+    .contact-link { font-size: clamp(1.05rem, 3vw, 1.4rem); overflow-wrap: anywhere; }
+    footer { border-top: 1px solid var(--line); padding-block: 1.5rem 2.5rem; color: var(--muted); font-size: .9rem; }
+    footer p { margin: 0; }
+    @media (max-width: 58rem) {
+      .projects { grid-template-columns: 1fr; }
+      .project { max-width: 48rem; }
+    }
+    @media (max-width: 38rem) {
+      .container { width: min(100% - 2rem, 70rem); }
+      .columns, .skills { grid-template-columns: 1fr; gap: 1.5rem; }
+      .hero { padding-block: 3rem; }
+      .section { padding-block: 2.5rem; }
+      nav { gap: .2rem 1rem; }
+    }
+    @media print {
+      :root { --background: #fff; --surface: #fff; --text: #111; --muted: #333; --accent: #164b3a; --line: #bbb; }
+      .skip, nav, .actions { display: none; }
+      .hero, .section { padding-block: 1.5rem; }
+      .projects { display: block; }
+      .project { break-inside: avoid; margin-bottom: 1rem; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <!-- ===== Tab bar (TOP) — segmented control ===== -->
-    <nav class="tabs-bar" role="tablist">
-      <div class="tabs" id="tabs">
-        <div class="tab active" role="tab" data-target="bio"><span class="pref">$</span>bio</div>
-        <div class="tab" role="tab" data-target="projects"><span class="pref">$</span>projects</div>
-        <div class="tab" role="tab" data-target="certs"><span class="pref">$</span>certifications</div>
-        <div class="tab" role="tab" data-target="skills"><span class="pref">$</span>skills</div>
-        <div class="tab" role="tab" data-target="contact"><span class="pref">$</span>contact</div>
-      </div>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="container">
+    <a class="brand" href="/" aria-label="Killian Miller home">KM<span aria-hidden="true">.</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#projects">Projects</a>
+      <a href="#research">Research</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
     </nav>
+  </header>
 
-    <div class="body-wrap">
-      <!-- ===== Hero ===== -->
-      <section class="hero">
-        <div class="prompt-line">
-          <span class="user">killian</span><span class="at">@</span><span class="path">portfolio</span><span class="sep">:</span><span class="path">~</span><span class="sep">$</span>
-        </div>
-        <h1 id="typeline"><span class="cursor"></span></h1>
-        <div class="sub" id="subline"></div>
-      </section>
-
-      <!-- ===== Free-floating content ===== -->
-      <section class="panel-wrap">
-        <div class="panel" id="panel">
-          <!-- Bio -->
-          <div class="panel-content active" data-tab="bio">
-            <h2>bio.txt</h2>
-            <p>I'm a security engineer focused on the intersection of LLMs and applied security — agentic systems, multi-agent orchestration, smart-contract auditing, and bug-bounty automation.</p>
-            <p>My recent work centers on building production-grade pipelines that use language models for reasoning about code and infrastructure: ranking targets, producing executable proofs-of-concept, and applying calibrated severity scoring with adversarial second-pass verification.</p>
-            <p>I care about empirical rigor — measurable calibration, sandboxed execution, cost-aware infrastructure, and shipping work that survives independent review.</p>
-          </div>
-
-          <!-- Projects -->
-          <div class="panel-content" data-tab="projects">
-            <h2>projects.md</h2>
-            <div class="project">
-              <h3>polysec-harness</h3>
-              <div class="meta">multi-agent LLM security research pipeline · Python · Foundry · MCP</div>
-              <p>Production-grade pipeline that audits smart contracts and web apps via role-specialized AI subprocesses: target-ranking, parallel investigation with executable PoCs, adversarial verification through four hard gates, and reproducible artifact bundles. <a href="https://github.com/KillianM00/polysec-harness" target="_blank" rel="noopener">github.com/KillianM00/polysec-harness</a></p>
-            </div>
-            <div class="project">
-              <h3>bootgate</h3>
-              <div class="meta">pre-OS UEFI password lock · C · EDK II · TPM 2.0 · QEMU+KVM CI</div>
-              <p>Pre-OS password lock written in C against the UEFI firmware interface. Runs from <code>\EFI\BOOT\BOOTX64.EFI</code> before any operating system loads, prompts for a password, then chainloads the OS bootloader on a successful unlock. Hand-written SHA-256, HMAC, PBKDF2 (100k iterations), and raw TPM2_PCR_Read marshalling for firmware-integrity tamper detection &mdash; no openssl dependency, only EDK II's MdePkg. Recovery passphrase, persistent exponential-backoff lockout, multi-OS boot menu, Secure Boot signing + MOK enrollment tooling, Linux and Windows installers. Automated QEMU+KVM test harness with 6 end-to-end scenarios running on every push under GitHub Actions CI. <a href="https://github.com/KillianM00/bootgate" target="_blank" rel="noopener">github.com/KillianM00/bootgate</a></p>
-            </div>
-            <div class="project">
-              <h3>hostcheck</h3>
-              <div class="meta">cross-platform PC security auditor · Python · Windows / Linux / macOS</div>
-              <p>Cross-platform local security auditor. 82 read-only checks across hardening, network exposure, software vulns, persistence, credentials, privacy, and backup; auto-routes to the right check set based on the host OS. Every finding maps to a plain-English error code and a copy-paste fix command. Ships as a CLI, desktop GUI, and single-file Windows installer. 144 tests. <a href="https://github.com/KillianM00/hostcheck" target="_blank" rel="noopener">github.com/KillianM00/hostcheck</a></p>
-            </div>
-            <div class="project">
-              <h3>leakcheck</h3>
-              <div class="meta">VPN leak auditor · Python · CLI + GUI · cross-platform · Windows installer</div>
-              <p>VPN leak auditor with five independent checks (DNS, IPv6, routing, WebRTC, killswitch). Pure-Python RFC 5389 STUN implementation replicates browser WebRTC leak behavior without bundling a headless browser; structural tunnel detection recognizes unknown VPN providers by routing-table shape rather than name. Every finding maps to a short error code and a copy-paste fix. CLI, desktop GUI, and single-file Windows installer. 24 tests, MIT. <a href="https://github.com/KillianM00/leakcheck" target="_blank" rel="noopener">github.com/KillianM00/leakcheck</a></p>
-            </div>
-            <div class="project">
-              <h3>bl2-save-editor</h3>
-              <div class="meta">full-stack save editor for Borderlands 2 · Python · Flask · Three.js</div>
-              <p>Web application for editing Borderlands 2 save files end-to-end: character stats and currencies, full inventory and weapon-part editing, per-class skill tree editor with live point counters, 3D character and weapon viewer in-browser, and Gibbed code import/export. Holographic UI themed after the in-game aesthetic. <a href="https://github.com/KillianM00/bl2-save-editor" target="_blank" rel="noopener">github.com/KillianM00/bl2-save-editor</a></p>
-            </div>
-          </div>
-
-          <!-- Certifications -->
-          <div class="panel-content" data-tab="certs">
-            <h2>certifications.txt</h2>
-            <ul>
-              <li>Add your certification name here · issuing body · YYYY</li>
-              <li>Add another certification · issuing body · YYYY</li>
-              <li>Add another certification · issuing body · YYYY</li>
-            </ul>
-            <p style="margin-top:1.3rem; color:#9bd5ff; font-family:'Ubuntu Mono',monospace; font-size:0.9rem;"># replace these placeholders with your real credentials (e.g. OSCP, CEH, Security+, eJPT, CISSP, GCFA, etc.)</p>
-          </div>
-
-          <!-- Skills -->
-          <div class="panel-content" data-tab="skills">
-            <h2>skills.txt</h2>
-            <div class="skill-grid">
-              <div>Python 3</div>
-              <div>C (UEFI / firmware)</div>
-              <div>Solidity / EVM</div>
-              <div>Foundry · Anvil · Cast</div>
-              <div>Slither · Mythril</div>
-              <div>EDK II · OVMF · QEMU+KVM</div>
-              <div>TPM 2.0 · PCR sealing</div>
-              <div>Secure Boot · sbsign · MOK</div>
-              <div>LLM orchestration</div>
-              <div>Multi-agent systems</div>
-              <div>Pydantic · mypy</div>
-              <div>MCP (Model Context Protocol)</div>
-              <div>Docker · sandboxing</div>
-              <div>mitmproxy</div>
-              <div>OWASP Top 10</div>
-              <div>Smart contract auditing</div>
-              <div>Bug-bounty workflow</div>
-              <div>Threat modeling</div>
-              <div>Linux / WSL2</div>
-              <div>GitHub Actions CI</div>
-            </div>
-          </div>
-
-          <!-- Contact -->
-          <div class="panel-content" data-tab="contact">
-            <h2>contact.txt</h2>
-            <p>Open to security research roles, smart-contract audit work, and applied-AI-security engineering positions.</p>
-            <ul>
-              <li>email · <a href="mailto:killianmiller6@gmail.com">killianmiller6@gmail.com</a></li>
-              <li>github · <a href="https://github.com/KillianM00" target="_blank" rel="noopener">github.com/KillianM00</a></li>
-              <li>repo · <a href="https://github.com/KillianM00/polysec-harness" target="_blank" rel="noopener">github.com/KillianM00/polysec-harness</a></li>
-            </ul>
-          </div>
-        </div>
-      </section>
-    </div>
-
-    <!-- ===== Footer ===== -->
-    <footer>
-      <div>© <span id="year"></span> Killian Miller</div>
-      <div class="links">
-        <a href="https://github.com/KillianM00" target="_blank" rel="noopener">github</a>
-        <a href="mailto:killianmiller6@gmail.com">email</a>
+  <main id="main" class="container">
+    <section class="hero" aria-labelledby="intro-title">
+      <p class="eyebrow">Security tooling · Systems software · Applied AI</p>
+      <h1 id="intro-title">Killian Miller</h1>
+      <p class="lead">I build tools that make complex systems easier to understand and work with, from security research pipelines to local applications and browser games.</p>
+      <p class="lead">My focus is reproducible behavior, clear documentation, and useful interfaces. Explore my public work below.</p>
+      <div class="actions">
+        <a class="button" href="#projects">Explore projects</a>
+        <a href="https://github.com/KillianM00">GitHub profile</a>
+        <a href="mailto:killianmiller6@gmail.com">Get in touch</a>
       </div>
-    </footer>
+    </section>
+
+    <section id="projects" class="section" aria-labelledby="projects-title">
+      <h2 id="projects-title">Selected public work</h2>
+      <p class="section-intro">Three projects with accessible source code and documentation, covering systems integration, API workflows, and browser application design.</p>
+      <div class="projects">
+        <article class="project">
+          <p class="stack">Python · Flask · JavaScript · Three.js</p>
+          <h3>BL2 Save Editor</h3>
+          <p>A local web application for editing Borderlands 2 characters and inventory, with Gibbed code import/export and an optional 3D asset viewer.</p>
+          <p class="detail"><strong>Engineering focus:</strong> binary save formats, backup and write workflows, and an interface for complex game data.</p>
+          <div class="project-links">
+            <a href="https://github.com/KillianM00/bl2-save-editor">Source &amp; setup</a>
+            <a href="https://github.com/KillianM00/bl2-save-editor/tree/main/tests">Test source</a>
+          </div>
+        </article>
+        <article class="project">
+          <p class="stack">Python · FastAPI · Click · Gmail API</p>
+          <h3>Gmail Manager</h3>
+          <p>A command-line tool and local web UI for bulk Gmail operations, unsubscribe workflows, and a local subscription registry.</p>
+          <p class="detail"><strong>Engineering focus:</strong> OAuth integration, batch operations, and a consistent workflow across the CLI and browser UI.</p>
+          <div class="project-links">
+            <a href="https://github.com/KillianM00/gmail-manager">Source &amp; setup</a>
+            <a href="https://pypi.org/project/gmail-manager/">Python package</a>
+          </div>
+        </article>
+        <article class="project">
+          <p class="stack">JavaScript · HTML · CSS · Web Audio</p>
+          <h3>flaggle.lofi</h3>
+          <p>A daily flag game with two modes, practice rounds, browser-local progress, and a synthesized lofi soundtrack.</p>
+          <p class="detail"><strong>Engineering focus:</strong> deterministic daily puzzles, color matching, and a static application with no build step.</p>
+          <div class="project-links">
+            <a href="https://kmiller.dev/flaggle-lofi/">Play the game</a>
+            <a href="https://github.com/KillianM00/flaggle-lofi">Source &amp; setup</a>
+          </div>
+        </article>
+      </div>
+      <p class="more">More public work: <a href="https://github.com/KillianM00/rl-map-manager">RL Map Manager</a> and <a href="https://github.com/KillianM00/roblox-multi-instance">Roblox Multi-Instance</a>.</p>
+    </section>
+
+    <section id="research" class="section" aria-labelledby="research-title">
+      <h2 id="research-title">Systems and security research</h2>
+      <p class="section-intro">These projects are currently private. They describe my areas of work; the public projects above are available for source review.</p>
+      <div class="columns">
+        <div>
+          <h3>Low-level systems</h3>
+          <p>BootGate explores pre-OS password gating through UEFI and EDK II, including password derivation, recovery flows, and QEMU-based testing.</p>
+          <p>Hostcheck and Leakcheck explore host hardening and VPN diagnostics, translating technical findings into explanations and suggested actions.</p>
+        </div>
+        <div>
+          <h3>Applied AI and verification</h3>
+          <p>Polysec Harness explores role-specialized language-model agents for security research, with separate investigation and verification stages.</p>
+          <p>My interests include reproducible findings, sandbox boundaries, severity calibration, and the cost of running multi-agent workflows.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <h2 id="skills-title">Technical focus</h2>
+      <dl class="skills">
+        <div><dt>Systems</dt><dd>C, UEFI / EDK II, Linux, QEMU, and KVM.</dd></div>
+        <div><dt>Security and applied AI</dt><dd>Threat modeling, sandboxing, verification workflows, and multi-agent orchestration.</dd></div>
+        <div><dt>Applications</dt><dd>Python, TypeScript, JavaScript, Flask, FastAPI, React, and C# / WPF.</dd></div>
+        <div><dt>Engineering practice</dt><dd>Git, automated tests, reproducible setup, and documentation.</dd></div>
+      </dl>
+    </section>
+
+    <section id="contact" class="section" aria-labelledby="contact-title">
+      <h2 id="contact-title">Let’s talk</h2>
+      <p class="section-intro">Open to conversations about security, systems, and applied-AI engineering opportunities.</p>
+      <p><a class="contact-link" href="mailto:killianmiller6@gmail.com">killianmiller6@gmail.com</a></p>
+      <p><a href="https://github.com/KillianM00">Find me on GitHub</a></p>
+    </section>
   </main>
 
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    function typewriter(targetEl, text, speed, done) {
-      const cursor = document.createElement('span');
-      cursor.className = 'cursor';
-      targetEl.innerHTML = '';
-      targetEl.appendChild(cursor);
-      let i = 0;
-      (function step() {
-        if (i < text.length) {
-          targetEl.insertBefore(document.createTextNode(text.charAt(i)), cursor);
-          i++;
-          setTimeout(step, speed);
-        } else {
-          setTimeout(() => {
-            cursor.classList.add('gone');
-            setTimeout(() => cursor.remove(), 500);
-            if (done) done();
-          }, 400);
-        }
-      })();
-    }
-
-    typewriter(document.getElementById('typeline'), "Killian Miller", 85, () => {
-      typewriter(document.getElementById('subline'), "security engineer · llm systems · smart-contract audit", 35);
-    });
-
-    const panel = document.getElementById('panel');
-    const tabs = document.querySelectorAll('.tab');
-    const contents = document.querySelectorAll('.panel-content');
-
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => panel.classList.add('visible'));
-    });
-
-    function switchTo(target) {
-      tabs.forEach(t => t.classList.toggle('active', t.dataset.target === target));
-      panel.classList.remove('visible');
-      setTimeout(() => {
-        contents.forEach(c => c.classList.toggle('active', c.dataset.tab === target));
-        void panel.offsetWidth;
-        panel.classList.add('visible');
-      }, 280);
-    }
-
-    tabs.forEach(t => {
-      t.addEventListener('click', () => switchTo(t.dataset.target));
-      t.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          switchTo(t.dataset.target);
-        }
-      });
-      t.setAttribute('tabindex', '0');
-    });
-
-    document.addEventListener('keydown', e => {
-      const map = { '1': 'bio', '2': 'projects', '3': 'certs', '4': 'skills', '5': 'contact' };
-      if (map[e.key] && !e.metaKey && !e.ctrlKey && !e.altKey) {
-        switchTo(map[e.key]);
-      }
-    });
-  </script>
+  <footer class="container"><p>© Killian Miller · Built with HTML and CSS.</p></footer>
 </body>
 </html>
