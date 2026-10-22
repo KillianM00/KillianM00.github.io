@@ -105,6 +105,10 @@
     .project .detail { font-size: .94rem; }
     .project-links { display: flex; flex-wrap: wrap; gap: .5rem 1rem; margin-top: 1.5rem; }
     .more { color: var(--muted); margin-top: 1.5rem; }
+    .disclosure { padding: clamp(1.25rem, 3vw, 2rem); margin-bottom: 2.5rem; background: var(--surface); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: .6rem; }
+    .disclosure .eyebrow { margin-bottom: .75rem; }
+    .disclosure p { max-width: 56rem; }
+    .disclosure .outcome { margin: 1.25rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .94rem; }
     .columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 2.5rem; }
     .columns p { color: var(--muted); }
     .skills { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2.5rem; margin: 0; }
@@ -198,7 +202,15 @@
 
     <section id="research" class="section" aria-labelledby="research-title">
       <h2 id="research-title">Systems and security research</h2>
-      <p class="section-intro">These projects are currently private. They describe my areas of work; the public projects above are available for source review.</p>
+      <p class="section-intro">Independent security research into trust boundaries in AI-assisted developer tools, supported by reproducible experiments and responsible disclosure.</p>
+      <article id="anthropic-disclosure" class="disclosure" aria-labelledby="disclosure-title">
+        <p class="eyebrow">Responsible disclosure · Anthropic · May 2026</p>
+        <h3 id="disclosure-title">Claude Code workspace-trust research</h3>
+        <p>Submitted a security report to Anthropic investigating how repository-provided hooks and MCP configuration interact with workspace trust and non-interactive execution in Claude Code.</p>
+        <p>Prepared reproduction cases, permission-mode comparisons, and startup timing evidence, then followed up with Anthropic’s security team to examine alternative explanations.</p>
+        <p class="outcome"><strong>Review outcome: Informative.</strong> In its May 28, 2026 response, Anthropic attributed the observations to inherited directory trust or non-interactive execution. The submission was reviewed but was not accepted as a confirmed vulnerability.</p>
+      </article>
+      <p class="section-intro">The additional projects below are currently private. They describe my areas of work; the public projects above are available for source review.</p>
       <div class="columns">
         <div>
           <h3>Low-level systems</h3>
