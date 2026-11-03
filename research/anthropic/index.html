@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Anthropic Bug Bounty Research | Killian Miller</title><meta name="description" content="Independent developer-tool security research: workspace trust, repository configuration, controlled reproduction, and a disclosure recognized by Anthropic."><meta name="theme-color" content="#0b1420"><link rel="canonical" href="https://kmiller.dev/research/anthropic/"><meta property="og:type" content="website"><meta property="og:title" content="Anthropic Bug Bounty Research | Killian Miller"><meta property="og:description" content="Independent developer-tool security research: workspace trust, repository configuration, controlled reproduction, and a disclosure recognized by Anthropic."><meta property="og:url" content="https://kmiller.dev/research/anthropic/"><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/styles.css"></head>
+<body><a class="skip" href="#main">Skip to content</a><div class="wrap"><header class="top"><a class="brand" href="/" aria-label="Killian Miller home"><span class="mark" aria-hidden="true">KM</span>Killian Miller</a><nav class="nav" aria-label="Main navigation"><a href="/#research">Anthropic research</a><a href="/#work">Projects</a><a href="https://github.com/KillianM00">GitHub</a><a href="/#contact">Contact</a></nav></header><main id="main">
+  <header class="article-head">
+    <a class="back" href="/#research">← Featured research</a>
+    <p class="eyebrow" style="margin-top:32px">Independent security research / responsible disclosure</p>
+    <h1>Anthropic bug bounty research</h1>
+    <p class="lede">Investigating how repository-controlled configuration interacts with workspace trust and execution permissions in developer tools.</p>
+    <div class="flow">Research question → controlled reproduction → evidence → vendor review</div>
+  </header>
+  <div class="article-layout">
+    <article class="article-body">
+      <div class="research-result">
+        <h2>Recognized by Anthropic</h2>
+        <p>In May 2026, Anthropic recognized my submission as informative and said it aided the discovery of other vulnerabilities.</p>
+      </div>
+      <section>
+        <h2>The research question</h2>
+        <p>Developer tools can load configuration from a repository while also offering permission settings intended to limit execution. My research examined how repository-provided hooks and MCP tool-server configuration interact with workspace trust and noninteractive execution in Anthropic’s coding-agent CLI.</p>
+        <p>The engineering question was where those controls take effect during startup, and how observed behavior changes across execution modes and permission settings.</p>
+      </section>
+      <section>
+        <h2>My contribution</h2>
+        <ul>
+          <li><strong>Reproduction cases:</strong> prepared concrete scenarios for examining repository configuration and execution behavior.</li>
+          <li><strong>Permission-mode comparisons:</strong> compared behavior across configurations to test the boundaries of the initial hypothesis.</li>
+          <li><strong>Startup timing evidence:</strong> documented when relevant behavior occurred during initialization and execution.</li>
+          <li><strong>Responsible disclosure:</strong> submitted the research to Anthropic and followed up with its security team to examine alternative explanations.</li>
+        </ul>
+      </section>
+      <section>
+        <h2>Technical skills demonstrated</h2>
+        <p><strong>Threat modeling:</strong> reasoning about the boundary between untrusted repository content and a tool operating with the user’s permissions.</p>
+        <p><strong>Experimental design:</strong> using reproduction cases, configuration comparisons, and timing evidence to distinguish an observation from its proposed explanation.</p>
+        <p><strong>Security communication:</strong> presenting a technical hypothesis with supporting evidence, responding to vendor feedback, and refining the interpretation through follow-up.</p>
+      </section>
+      <section>
+        <h2>Disclosure outcome</h2>
+        <p>Anthropic’s feedback recognized the submission as informative and helpful in discovering other vulnerabilities. This public summary presents the research process and that acknowledgment; the detailed report and correspondence remain private.</p>
+        <p>The experience reinforced the value of a precise reproduction and careful treatment of competing explanations during security review.</p>
+      </section>
+      <section>
+        <h2>Related engineering</h2>
+        <p>My <a href="/projects/redteam-harness/">Redteam Harness</a> case study covers structured security evaluation, distinct judge and target roles, and reproducible evidence. <a href="/projects/polysec-harness/">Polysec Harness</a> explores orchestration, independent verification, and operator review.</p>
+      </section>
+    </article>
+    <aside class="article-aside" aria-label="Research facts">
+      <span class="label">Role</span><p>Independent security researcher</p>
+      <span class="label">Research area</span><p>Developer-tool security, workspace trust, repository configuration, and execution permissions</p>
+      <span class="label">Disclosure</span><p>Submitted to Anthropic<br>Acknowledgment: May 2026</p>
+      <span class="label">Public material</span><p>Research summary and acknowledgment. Detailed report and correspondence are private.</p>
+      <span class="label">Program context</span><p><a href="https://www.anthropic.com/responsible-disclosure-policy">Anthropic responsible disclosure policy ↗</a></p>
+    </aside>
+  </div>
+  <p class="case-footer"><a href="/#research">← Back to featured research</a></p>
+</main><footer class="footer"><span>Killian Miller · Security &amp; systems engineering</span><span>Source-reviewed project notes · November 2026</span></footer></div></body></html>

@@ -2,7 +2,7 @@
 
 A static portfolio at [kmiller.dev](https://kmiller.dev/), built with semantic HTML and responsive CSS and hosted on the existing GitHub Pages deployment.
 
-The site leads with cybersecurity and systems projects, then connects implementation details to public technical case studies. Repository visibility, project maturity, and validation limits are stated explicitly. Content and navigation work without JavaScript.
+The site leads with independent bug bounty research and an Anthropic responsible-disclosure acknowledgment, followed by cybersecurity and systems engineering case studies. Repository visibility, project maturity, and validation limits are stated explicitly. Content and navigation work without JavaScript.
 
 ## Local preview
 
@@ -15,6 +15,7 @@ Open `http://localhost:8000`. There is no package installation or build step.
 ## Source map
 
 - `index.html`: project selection, research context, and contact information.
+- `research/anthropic/index.html`: research methods and disclosure acknowledgment.
 - `projects/*/index.html`: technical case studies and evidence boundaries.
 - `styles.css`: shared responsive, keyboard-focus, reduced-motion, and print styles.
 - `favicon.svg`: portfolio monogram.
