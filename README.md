@@ -1,35 +1,29 @@
-# Killian Miller — Portfolio
+# Killian Miller — Security and Systems Portfolio
 
-Personal portfolio at [kmiller.dev](https://kmiller.dev/), built with semantic HTML and CSS and hosted on GitHub Pages.
+A static portfolio at [kmiller.dev](https://kmiller.dev/), built with semantic HTML and responsive CSS and hosted on the existing GitHub Pages deployment.
 
-The site presents selected public projects, private research areas, technical interests, and contact information. Content and navigation work without JavaScript.
+The site leads with cybersecurity and systems projects, then connects implementation details to public technical case studies. Repository visibility, project maturity, and validation limits are stated explicitly. Content and navigation work without JavaScript.
 
-## Preview locally
-
-Requires Python 3. From the repository directory:
+## Local preview
 
 ```sh
-python -m http.server 8000 --bind 127.0.0.1
+python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-Open [localhost:8000](http://localhost:8000/). No package installation or build step is required.
+Open `http://localhost:8000`. There is no package installation or build step.
 
-## Files
+## Source map
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | Content, navigation, responsive styles, and page metadata |
-| `favicon.svg` | Portfolio monogram |
-| `CNAME` | GitHub Pages custom domain |
+- `index.html`: project selection, research context, and contact information.
+- `projects/*/index.html`: technical case studies and evidence boundaries.
+- `styles.css`: shared responsive, keyboard-focus, reduced-motion, and print styles.
+- `favicon.svg`: portfolio monogram.
+- `CNAME`: existing custom domain, `kmiller.dev`.
 
-## Before publishing
+## Publishing checks
 
-- Review at narrow mobile and desktop widths, including 200% zoom.
-- Use the keyboard to follow the skip link, navigation, and project links; verify visible focus.
-- Check the page with JavaScript disabled and in print preview.
-- Verify each external project link in a signed-out browser.
-- Keep project descriptions consistent with the source and distinguish private work from publicly inspectable projects.
+Review mobile and desktop layouts, keyboard navigation, local links, and print output. Keep private-source links out of public navigation; link to the public case study instead. Update technical claims when implementation or validation evidence changes. Do not publish raw research captures or credentials.
 
 ## Deployment
 
-The existing GitHub Pages deployment uses `main`. Merging a change into `main` publishes it through the Pages build and deployment workflow. Keep `CNAME` set to `kmiller.dev`.
+GitHub Pages publishes the root of `main`. Keep the existing CNAME and `.nojekyll` files. This site presents research; publishing it does not change the visibility or deployment state of any featured application.
